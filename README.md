@@ -1,4 +1,4 @@
-# Founders' Forge — Frontend
+# Founders' Forge - Frontend
 
 Next.js frontend for Founders' Forge. Takes a business idea, target country, and target customer, and renders the AI-generated business plan returned by the backend.
 
