@@ -50,8 +50,10 @@ export interface Finance {
   currency: string;
   startup_cost: number | string;
   monthly_burn: number | string;
-  breakeven_months: number | string;
-  breakeven_note: string;
+  theoretical_breakeven_months: number | string;
+  realistic_breakeven_months: number | string;
+  monthly_revenue: number | string;
+  monthly_surplus: number | string;
   expected_pricing: string;
   assumed_customers_month_12: number | string;
   cac: number | string;
@@ -70,8 +72,19 @@ export interface Swot {
 
 export type GoToMarketIdea = string | { idea?: string; description?: string };
 
+export interface AcquisitionChannel {
+  channel: string;
+  reason: string;
+  priority: number;
+}
+
 export interface Marketing {
   positioning: string;
+  ideal_customer_message: string;
+  launch_strategy: string;
+  customer_acquisition_channels: AcquisitionChannel[];
+  kpis: string[];
+  biggest_marketing_risk: string;
   go_to_market_ideas: GoToMarketIdea[];
 }
 
@@ -80,11 +93,25 @@ export interface Legal {
   disclaimer: string;
 }
 
+export interface MoatComponent {
+  score: number;
+  reason: string;
+}
+
 export interface InvestmentScore {
   market_potential: number;
   competition: number;
   execution_difficulty: number;
   moat: number;
+
+  moat_breakdown: {
+    brand_advantage: MoatComponent;
+    technology_ip: MoatComponent;
+    network_effects: MoatComponent;
+    switching_costs: MoatComponent;
+    data_distribution: MoatComponent;
+  };
+
   overall_score: number;
   reasoning: string;
 }

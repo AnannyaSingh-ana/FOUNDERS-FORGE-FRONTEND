@@ -138,11 +138,16 @@ function Snapshot({ plan }: { plan: BusinessPlan }) {
             return (
               <div key={d.label}>
                 <div className="flex justify-between font-mono text-xs mb-1">
-                  <span className="text-[#8AA0B4] uppercase tracking-wider">{d.label}</span>
+                  <span className="text-[#8AA0B4] uppercase tracking-wider">
+                    {d.label}
+                  </span>
                   <span className="text-[#EDE8DE]">{d.value}/10</span>
                 </div>
                 <div className="h-1.5 bg-[#0B1220] rounded-full overflow-hidden border border-[#233040]">
-                  <div className="h-full bg-[#E8590C]" style={{ width: `${pct}%` }} />
+                  <div
+                    className="h-full bg-[#E8590C]"
+                    style={{ width: `${pct}%` }}
+                  />
                 </div>
               </div>
             );
@@ -152,14 +157,17 @@ function Snapshot({ plan }: { plan: BusinessPlan }) {
 
       {/* Quick stats strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-[#233040]">
-        <Stat label="Market size" value={market_research.estimated_market_size} />
+        <Stat
+          label="Market size"
+          value={market_research.estimated_market_size}
+        />
         <Stat
           label="Startup cost"
           value={formatMoney(finance.startup_cost, finance.currency)}
         />
         <Stat
-          label="Breakeven"
-          value={typeof finance.breakeven_months === "number" ? `${finance.breakeven_months} mo` : finance.breakeven_months}
+          label="Realistic breakeven"
+          value={`${formatPlain(finance.realistic_breakeven_months)} mo`}
         />
         <Stat label="Biggest risk" value={founder_advisor.biggest_risk} />
       </div>
@@ -210,11 +218,17 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
         <p className="font-mono text-[10px] uppercase tracking-wider text-[#E8590C] mb-1">
           Overall verdict
         </p>
-        <p className="text-[#EDE8DE] text-sm leading-relaxed">{overall_verdict}</p>
+        <p className="text-[#EDE8DE] text-sm leading-relaxed">
+          {overall_verdict}
+        </p>
       </div>
 
       <div className="space-y-6">
-        <Section code="01" title="Market Research" confidence={market_research.confidence}>
+        <Section
+          code="01"
+          title="Market Research"
+          confidence={market_research.confidence}
+        >
           <p>{market_research.summary}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
             <div>
@@ -230,16 +244,28 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
               <BulletList items={market_research.market_trends} />
             </div>
           </div>
-          <Stat label="Estimated market size" value={market_research.estimated_market_size} />
-          <p className="text-xs text-[#6E8496] italic">{market_research.confidence_reason}</p>
+          <Stat
+            label="Estimated market size"
+            value={market_research.estimated_market_size}
+          />
+          <p className="text-xs text-[#6E8496] italic">
+            {market_research.confidence_reason}
+          </p>
           <SourceList sources={market_research.sources} />
         </Section>
 
-        <Section code="02" title="Competitor Analysis" confidence={competitor_analysis.confidence}>
+        <Section
+          code="02"
+          title="Competitor Analysis"
+          confidence={competitor_analysis.confidence}
+        >
           <p>{competitor_analysis.summary}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
             {competitor_analysis.competitors.map((c, i) => (
-              <div key={i} className="border border-[#233040] rounded-sm px-3 py-2.5">
+              <div
+                key={i}
+                className="border border-[#233040] rounded-sm px-3 py-2.5"
+              >
                 <p className="text-[#EDE8DE] font-medium text-sm">{c.name}</p>
                 <p className="text-xs text-[#8AA0B4] mt-1">{c.positioning}</p>
               </div>
@@ -251,19 +277,33 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
             </p>
             <BulletList items={competitor_analysis.market_gaps} />
           </div>
-          <p className="text-xs text-[#6E8496] italic">{competitor_analysis.confidence_reason}</p>
+          <p className="text-xs text-[#6E8496] italic">
+            {competitor_analysis.confidence_reason}
+          </p>
           <SourceList sources={competitor_analysis.sources} />
         </Section>
 
-        <Section code="03" title="Historical Failures" confidence={historical_failures.confidence}>
+        <Section
+          code="03"
+          title="Historical Failures"
+          confidence={historical_failures.confidence}
+        >
           <p>{historical_failures.summary}</p>
           <div className="space-y-2 pt-1">
             {historical_failures.similar_failures.map((f, i) => (
-              <div key={i} className="border border-[#233040] rounded-sm px-3 py-2.5">
+              <div
+                key={i}
+                className="border border-[#233040] rounded-sm px-3 py-2.5"
+              >
                 <p className="text-[#EDE8DE] font-medium text-sm">
-                  {f.name} <span className="text-[#6E8496] font-normal">&mdash; {f.market}</span>
+                  {f.name}{" "}
+                  <span className="text-[#6E8496] font-normal">
+                    &mdash; {f.market}
+                  </span>
                 </p>
-                <p className="text-xs text-[#8AA0B4] mt-1">{f.reason_for_failure}</p>
+                <p className="text-xs text-[#8AA0B4] mt-1">
+                  {f.reason_for_failure}
+                </p>
               </div>
             ))}
           </div>
@@ -273,47 +313,99 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
             </p>
             <BulletList items={historical_failures.lessons} />
           </div>
-          <p className="text-xs text-[#6E8496] italic">{historical_failures.confidence_reason}</p>
+          <p className="text-xs text-[#6E8496] italic">
+            {historical_failures.confidence_reason}
+          </p>
           <SourceList sources={historical_failures.sources} />
         </Section>
 
         <Section code="04" title="Finance">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Stat label="Startup cost" value={formatMoney(finance.startup_cost, finance.currency)} />
-            <Stat label="Monthly burn" value={formatMoney(finance.monthly_burn, finance.currency)} />
-            <Stat label="Breakeven" value={`${formatPlain(finance.breakeven_months)} mo`} />
-            <Stat label="Gross margin" value={finance.gross_margin} />
+            <Stat
+              label="Startup cost"
+              value={formatMoney(finance.startup_cost, finance.currency)}
+            />
+
+            <Stat
+              label="Monthly burn"
+              value={formatMoney(finance.monthly_burn, finance.currency)}
+            />
+
+            <Stat
+              label="Theoretical breakeven"
+              value={`${formatPlain(finance.theoretical_breakeven_months)} mo`}
+            />
+
+            <Stat
+              label="Realistic breakeven"
+              value={`${formatPlain(finance.realistic_breakeven_months)} mo`}
+            />
+
+            <Stat
+              label="Monthly revenue"
+              value={formatMoney(finance.monthly_revenue, finance.currency)}
+            />
+
+            <Stat
+              label="Monthly surplus"
+              value={formatMoney(finance.monthly_surplus, finance.currency)}
+            />
+
             <Stat label="Expected pricing" value={finance.expected_pricing} />
-            <Stat label="Customers (mo 12)" value={formatPlain(finance.assumed_customers_month_12)} />
-            <Stat label="CAC" value={formatMoney(finance.cac, finance.currency)} />
-            <Stat label="LTV" value={formatMoney(finance.ltv, finance.currency)} />
+
+            <Stat
+              label="Customers (Month 12)"
+              value={formatPlain(finance.assumed_customers_month_12)}
+            />
+
+            <Stat
+              label="CAC"
+              value={formatMoney(finance.cac, finance.currency)}
+            />
+
+            <Stat
+              label="LTV"
+              value={formatMoney(finance.ltv, finance.currency)}
+            />
+
+            <Stat label="Gross margin" value={finance.gross_margin} />
           </div>
-          <p className="text-xs text-[#8AA0B4] pt-1">{finance.breakeven_note}</p>
+          
           <div>
             <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1 mt-2">
               Assumptions
             </p>
             <BulletList items={finance.assumptions} />
           </div>
-          <p className="text-xs text-[#6E8496] italic pt-1">{finance.disclaimer}</p>
+          <p className="text-xs text-[#6E8496] italic pt-1">
+            {finance.disclaimer}
+          </p>
         </Section>
 
         <Section code="05" title="SWOT">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="border border-[#233040] rounded-sm px-3 py-2.5">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">Strengths</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">
+                Strengths
+              </p>
               <BulletList items={swot.strengths} />
             </div>
             <div className="border border-[#233040] rounded-sm px-3 py-2.5">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">Weaknesses</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">
+                Weaknesses
+              </p>
               <BulletList items={swot.weaknesses} />
             </div>
             <div className="border border-[#233040] rounded-sm px-3 py-2.5">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">Opportunities</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">
+                Opportunities
+              </p>
               <BulletList items={swot.opportunities} />
             </div>
             <div className="border border-[#233040] rounded-sm px-3 py-2.5">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">Threats</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1">
+                Threats
+              </p>
               <BulletList items={swot.threats} />
             </div>
           </div>
@@ -324,12 +416,22 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
           <div className="space-y-2 pt-1">
             {marketing.go_to_market_ideas.map((item, i) => {
               const title = typeof item === "string" ? item : item.idea;
-              const desc = typeof item === "string" ? undefined : item.description;
+              const desc =
+                typeof item === "string" ? undefined : item.description;
               if (!title && !desc) return null;
               return (
-                <div key={i} className="border border-[#233040] rounded-sm px-3 py-2.5">
-                  {title && <p className="text-[#EDE8DE] font-medium text-sm">{title}</p>}
-                  {desc && <p className="text-xs text-[#8AA0B4] mt-1">{desc}</p>}
+                <div
+                  key={i}
+                  className="border border-[#233040] rounded-sm px-3 py-2.5"
+                >
+                  {title && (
+                    <p className="text-[#EDE8DE] font-medium text-sm">
+                      {title}
+                    </p>
+                  )}
+                  {desc && (
+                    <p className="text-xs text-[#8AA0B4] mt-1">{desc}</p>
+                  )}
                 </div>
               );
             })}
@@ -338,14 +440,25 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
 
         <Section code="07" title="Legal">
           <BulletList items={legal.considerations} />
-          <p className="text-xs text-[#6E8496] italic pt-1">{legal.disclaimer}</p>
+          <p className="text-xs text-[#6E8496] italic pt-1">
+            {legal.disclaimer}
+          </p>
         </Section>
 
         <Section code="08" title="Investment Score">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <ScoreBar label="Market potential" value={investment_score.market_potential} />
-            <ScoreBar label="Competition" value={investment_score.competition} />
-            <ScoreBar label="Execution difficulty" value={investment_score.execution_difficulty} />
+            <ScoreBar
+              label="Market potential"
+              value={investment_score.market_potential}
+            />
+            <ScoreBar
+              label="Competition"
+              value={investment_score.competition}
+            />
+            <ScoreBar
+              label="Execution difficulty"
+              value={investment_score.execution_difficulty}
+            />
             <ScoreBar label="Moat" value={investment_score.moat} />
           </div>
           <div className="pt-3">
