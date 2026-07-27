@@ -370,7 +370,7 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
 
             <Stat label="Gross margin" value={finance.gross_margin} />
           </div>
-          
+
           <div>
             <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1 mt-2">
               Assumptions
@@ -412,29 +412,104 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
         </Section>
 
         <Section code="06" title="Marketing">
-          <p>{marketing.positioning}</p>
-          <div className="space-y-2 pt-1">
-            {marketing.go_to_market_ideas.map((item, i) => {
-              const title = typeof item === "string" ? item : item.idea;
-              const desc =
-                typeof item === "string" ? undefined : item.description;
-              if (!title && !desc) return null;
-              return (
-                <div
-                  key={i}
-                  className="border border-[#233040] rounded-sm px-3 py-2.5"
-                >
-                  {title && (
-                    <p className="text-[#EDE8DE] font-medium text-sm">
-                      {title}
-                    </p>
-                  )}
-                  {desc && (
-                    <p className="text-xs text-[#8AA0B4] mt-1">{desc}</p>
-                  )}
+          <div className="space-y-5">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                Positioning
+              </p>
+              <p>{marketing.positioning}</p>
+            </div>
+
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                Ideal Customer Message
+              </p>
+              <p>{marketing.ideal_customer_message}</p>
+            </div>
+
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                Launch Strategy
+              </p>
+              <p>{marketing.launch_strategy}</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="border border-[#233040] rounded-sm px-3 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                  Customer Acquisition Channels
+                </p>
+                <div className="space-y-2">
+                  {marketing.customer_acquisition_channels
+                    .sort((a, b) => a.priority - b.priority)
+                    .map((channel, i) => (
+                      <div
+                        key={i}
+                        className="border border-[#233040] rounded-sm px-3 py-2.5"
+                      >
+                        <div className="flex justify-between items-center">
+                          <p className="text-[#EDE8DE] font-medium text-sm">
+                            {channel.channel}
+                          </p>
+
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-[#E8590C]">
+                            P{channel.priority}
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-[#8AA0B4] mt-1">
+                          {channel.reason}
+                        </p>
+                      </div>
+                    ))}
                 </div>
-              );
-            })}
+              </div>
+
+              <div className="border border-[#233040] rounded-sm px-3 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                  KPIs
+                </p>
+                <BulletList items={marketing.kpis} />
+              </div>
+            </div>
+
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                Go-to-Market Ideas
+              </p>
+
+              <div className="space-y-2">
+                {marketing.go_to_market_ideas.map((item, i) => {
+                  const title = typeof item === "string" ? item : item.idea;
+                  const desc =
+                    typeof item === "string" ? undefined : item.description;
+
+                  return (
+                    <div
+                      key={i}
+                      className="border border-[#233040] rounded-sm px-3 py-2.5"
+                    >
+                      {title && (
+                        <p className="text-[#EDE8DE] font-medium text-sm">
+                          {title}
+                        </p>
+                      )}
+
+                      {desc && (
+                        <p className="text-xs text-[#8AA0B4] mt-1">{desc}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="border border-[#233040] rounded-sm px-3 py-3">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-2">
+                Biggest Marketing Risk
+              </p>
+              <p>{marketing.biggest_marketing_risk}</p>
+            </div>
           </div>
         </Section>
 
