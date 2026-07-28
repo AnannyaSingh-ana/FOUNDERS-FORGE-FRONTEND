@@ -1,5 +1,7 @@
 import { BusinessPlan, Source } from "@/lib/types";
 import Section from "@/components/ui/Section";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 interface PlanResultsProps {
   plan: BusinessPlan;
@@ -176,21 +178,29 @@ function Snapshot({ plan }: { plan: BusinessPlan }) {
 }
 
 export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
+  
   const {
+    overall_verdict,
     market_research,
     competitor_analysis,
     historical_failures,
     finance,
     swot,
     marketing,
-    legal,
     investment_score,
     founder_advisor,
-    overall_verdict,
   } = plan;
+  console.log(finance);
+  const reportRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    contentRef: reportRef,
+    documentTitle: `${plan.idea} Business Report`,
+  });
+
+  
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div ref={reportRef} className="max-w-4xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
           <p className="font-mono text-xs text-[#E8590C] tracking-[0.2em] mb-2">
@@ -203,12 +213,21 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
             {plan.target_country} &middot; {plan.target_customer}
           </p>
         </div>
-        <button
-          onClick={onStartOver}
-          className="font-mono text-xs uppercase tracking-wider border border-[#2A3A4A] text-[#C9D2DA] hover:border-[#E8590C] hover:text-[#E8590C] transition-colors px-4 py-2 rounded-sm shrink-0"
-        >
-          Start over
-        </button>
+        <div className="flex gap-3 shrink-0 print:hidden">
+          <button
+            onClick={handlePrint}
+            className="font-mono text-xs uppercase tracking-wider bg-[#E8590C] text-white hover:opacity-90 transition-colors px-4 py-2 rounded-sm"
+          >
+            Download PDF
+          </button>
+
+          <button
+            onClick={onStartOver}
+            className="font-mono text-xs uppercase tracking-wider border border-[#2A3A4A] text-[#C9D2DA] hover:border-[#E8590C] hover:text-[#E8590C] transition-colors px-4 py-2 rounded-sm"
+          >
+            Start over
+          </button>
+        </div>
       </div>
 
       <Snapshot plan={plan} />
@@ -513,29 +532,65 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
           </div>
         </Section>
 
-        <Section code="07" title="Legal">
-          <BulletList items={legal.considerations} />
-          <p className="text-xs text-[#6E8496] italic pt-1">
-            {legal.disclaimer}
-          </p>
-        </Section>
-
         <Section code="08" title="Investment Score">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <ScoreBar
               label="Market potential"
               value={investment_score.market_potential}
             />
+
             <ScoreBar
               label="Competition"
               value={investment_score.competition}
             />
+
             <ScoreBar
               label="Execution difficulty"
               value={investment_score.execution_difficulty}
             />
-            <ScoreBar label="Moat" value={investment_score.moat} />
+
+            <div className="border border-[#233040] rounded-sm p-4">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-3">
+                Moat Breakdown
+              </p>
+
+              {[
+                {
+                  label: "Brand Advantage",
+                  moat: investment_score.moat_breakdown.brand_advantage,
+                },
+                {
+                  label: "Technology / IP",
+                  moat: investment_score.moat_breakdown.technology_ip,
+                },
+                {
+                  label: "Network Effects",
+                  moat: investment_score.moat_breakdown.network_effects,
+                },
+                {
+                  label: "Switching Costs",
+                  moat: investment_score.moat_breakdown.switching_costs,
+                },
+                {
+                  label: "Data / Distribution",
+                  moat: investment_score.moat_breakdown.data_distribution,
+                },
+              ].map(({ label, moat }) => (
+                <div key={label} className="mb-3 last:mb-0">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm text-[#EDE8DE]">{label}</span>
+
+                    <span className="font-mono text-xs text-[#E8590C]">
+                      {moat.score}/2
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-[#8AA0B4]">{moat.reason}</p>
+                </div>
+              ))}
+            </div>
           </div>
+
           <div className="pt-3">
             <p className="font-mono text-xs uppercase tracking-wider text-[#6E8496] mb-1">
               Overall score:{" "}
@@ -543,6 +598,7 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
                 {formatOverallScore(investment_score.overall_score)}
               </span>
             </p>
+
             <p>{investment_score.reasoning}</p>
           </div>
         </Section>
