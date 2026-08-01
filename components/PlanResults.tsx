@@ -31,14 +31,17 @@ function formatOverallScore(value: number): string {
   return value > 10 ? `${value}/100` : `${value}/10`;
 }
 
-function BulletList({ items }: { items: string[] }) {
+function BulletList({ items }: { items: any[] }) {
   if (!items || items.length === 0) return null;
+
   return (
     <ul className="space-y-1.5 list-none">
       {items.map((item, i) => (
         <li key={i} className="flex gap-2">
           <span className="text-[#E8590C] mt-1 text-[10px]">&#9670;</span>
-          <span>{item}</span>
+          <span>
+            {typeof item === "string" ? item : JSON.stringify(item, null, 2)}
+          </span>
         </li>
       ))}
     </ul>
@@ -129,7 +132,12 @@ function Snapshot({ plan }: { plan: BusinessPlan }) {
             {formatOverallScore(investment_score.overall_score)}
           </p>
           <p className="font-mono text-[10px] uppercase tracking-wider text-[#8AA0B4] mt-2 text-center">
-            {founder_advisor.launch_decision}
+            {{
+              YES: "Recommended",
+              NO: "Not Recommended",
+              "NOT YET": "Needs Validation",
+            }[founder_advisor.launch_decision] ??
+              founder_advisor.launch_decision}
           </p>
         </div>
 
@@ -394,6 +402,7 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
             <p className="font-mono text-[10px] uppercase tracking-wider text-[#6E8496] mb-1 mt-2">
               Assumptions
             </p>
+
             <BulletList items={finance.assumptions} />
           </div>
           <p className="text-xs text-[#6E8496] italic pt-1">
@@ -605,7 +614,12 @@ export default function PlanResults({ plan, onStartOver }: PlanResultsProps) {
 
         <Section code="09" title="Founder Advisor">
           <p className="font-mono text-xs uppercase tracking-wider text-[#E8590C]">
-            {founder_advisor.launch_decision}
+            {{
+              YES: "Recommended",
+              NO: "Not Recommended",
+              "NOT YET": "Needs Validation",
+            }[founder_advisor.launch_decision] ??
+              founder_advisor.launch_decision}
           </p>
           <p>{founder_advisor.reason}</p>
           <Stat label="Biggest risk" value={founder_advisor.biggest_risk} />

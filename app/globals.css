@@ -12,3 +12,15 @@ body {
     linear-gradient(90deg, rgba(74, 108, 138, 0.06) 1px, transparent 1px);
   background-size: 32px 32px;
 }
+@media print {
+  html,
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
