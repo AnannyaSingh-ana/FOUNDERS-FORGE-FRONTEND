@@ -1,4 +1,4 @@
-# 🚀 Founders' Forge — Frontend
+# 🚀 Founders' Forge - Frontend
 
 Frontend for **Founders' Forge**, a multi-agent AI startup consulting platform.
 
